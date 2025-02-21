@@ -1,0 +1,39 @@
+.listing-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.listing-title {
+    text-align: center;
+    color: #007bff;
+    font-size: 2rem;
+}
+.image-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.listing-info p {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 8px;
+}
+.listing-actions, .bid-section, .comment-section {
+    margin-top: 20px;
+    text-align: center;
+}
+.btn {
+    margin: 5px;
+}
+.comments-section {
+    margin-top: 20px;
+}
+.comments-list li {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}

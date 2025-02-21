@@ -1,0 +1,97 @@
+{% extends 'auctions/layout.html' %}
+{% load humanize %}
+{% block title %}Listing{% endblock %}
+
+{% block body %}
+    <div class="listing-container">
+        {% if message %}
+            <div class="alert alert-info" role="alert">{{ message }}</div>
+        {% endif %}
+        {% if winner %}
+            <div class="alert alert-success" role="alert">The auction has ended. You are the winner!</div>
+        {% endif %}
+
+        <h2 class="section-title">{{ listing.title }}</h2>
+        
+        {% if listing.image %}
+            <div class="image-container">
+                <img src="{{ listing.image.url }}" alt="Uploaded Image" class="listing-image">
+            </div>
+        {% endif %}
+
+        <div class="listing-info">
+            <p class="listing-description">{{ listing.description }}</p>
+            <p><strong>Starting Price:</strong> ${{ listing.starting_bid|intcomma }}</p>
+            <p><strong>Category:</strong> {{ listing.category }}</p>
+            <p><strong>Listed by:</strong> {{ listing.seller }}</p>
+            <p><strong>Created on:</strong> {{ listing.created_at }}</p>
+            <p><strong>Active:</strong> {{ listing.auction.is_active }}</p>
+            <p><strong>Winner:</strong> {{ listing.auction.winner }}</p>
+            {% if listing.highest_bid %}
+                <p><strong>Highest bid:</strong> ${{ listing.highest_bid.amount|intcomma }}</p>
+            {% endif %}
+        </div>
+
+        <div class="listing-actions">
+            {% if listing.seller == user %}
+                <a href="{% url 'edit_listing' listing.id %}" class="btn btn-secondary">Edit Listing</a>
+                {% if listing.auction.is_active %}
+                    <form action="{% url 'close_auction' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Close Auction</button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'open_auction' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Open Auction</button>
+                    </form>
+                {% endif %}
+            {% else %}
+                {% if watchlist %}
+                    <form action="{% url 'remove_from_watchlist' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning">Remove from Watchlist</button>
+                    </form>
+                {% else %}
+                    <form action="{% url 'add_to_watchlist' listing.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Add to Watchlist</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="bid-section">
+            <form action="{% url 'bid' listing.id %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="bid">Place Bid</label>
+                    <input type="number" class="form-control" id="bid" name="bid">
+                </div>
+                <button type="submit" class="btn btn-primary">Place Bid</button>
+            </form>
+        </div>
+
+        {% if listing.comments.all %}
+            <div class="comments-section">
+                <h3>Comments:</h3>
+                <ul class="comments-list">
+                    {% for comment in listing.comments.all %}
+                        <li><strong>{{ comment.created_by }}:</strong> {{ comment.content }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="comment-section">
+            <form action="{% url 'listing' listing.id %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="comment">Add Comment</label>
+                    <textarea class="form-control" id="comment" name="comment"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Comment</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

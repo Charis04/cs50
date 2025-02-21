@@ -1,0 +1,84 @@
+.section-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #000f38da;
+}
+
+/* Listings Container */
+.listings-container {
+    max-width: 100%;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Clickable Listing Link */
+.listing-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Listing Row (Image Left, Text Right) */
+.listing-row {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin-bottom: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.listing-row:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Listing Image */
+.listing-image {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 20px;
+    border: 3px solid #f4f4f5; /* Blue border */
+    padding: 5px;
+    background: white; /* Ensures contrast */
+}
+
+/* Listing Details */
+.listing-details {
+    flex: 1;
+}
+
+.listing-title {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.listing-description {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.listing-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #28a745;
+    margin-bottom: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .listing-row {
+        flex-direction: column;
+        text-align: center;
+    }
+    .listing-image {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
