@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -51,8 +52,8 @@ class Auction(models.Model):
     listing = models.OneToOneField(Listing, on_delete=models.CASCADE, related_name="auction")
     winner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="auctions")
     created_at = models.DateTimeField(auto_now_add=True)
-    start_time = models.DateTimeField()
-    ends_at = models.DateTimeField()
+    start_time = models.DateTimeField(auto_now_add=True)
+    ends_at = models.DateTimeField(timezone.now() + timezone.timedelta(days=30))
     is_active = models.BooleanField(default=True)
 
     def __str__(self):

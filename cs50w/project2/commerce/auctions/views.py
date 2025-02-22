@@ -3,6 +3,9 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from datetime import datetime
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
 from .models import User, Listing, Category, Watchlist, Auction
 
@@ -75,12 +78,16 @@ def create_listing(request):
         description = request.POST["description"]
         starting_bid = request.POST["starting_bid"]
         category = Category.objects.get(name=request.POST["category"])
-        image = request.FILES["image"]
+        if 'image' in request.FILES:
+            image = request.FILES["image"]
+        else:
+            image = None
         user = request.user
         listing = Listing(
             title=title, description=description, starting_bid=starting_bid,
             image=image, category=category, seller=user)
         listing.save()
+        Auction(listing=listing, ends_at=datetime.now() + timezone.timedelta(days=30)).save()
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/create_listing.html")
@@ -169,7 +176,18 @@ def edit_listing(request, listing_id):
     pass
 
 def close_auction(request, listing_id):
-    pass
+    login_required(request)
+    listing = Listing.objects.get(pk=listing_id)
+    auction = listing.auction
+    auction.is_active = False
+    auction.winner = listing.highest_bid.bidder
+    auction.save()
+    return HttpResponseRedirect(reverse("listing", args=(listing_id,))) 
 
 def open_auction(request, listing_id):
-    pass
+    login_required(request)
+    listing = Listing.objects.get(pk=listing_id)
+    auction = listing.auction
+    auction.is_active = True
+    auction.save()
+    return HttpResponseRedirect(reverse("listing", args=(listing_id,)))
